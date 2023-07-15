@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1 id="username"></h1>
+    <script>
+        const username = '<%=username%>';
+        if(username !== '') {
+            sessionStorage.setItem('username', username);
+        }
+        document.getElementById('username').textContent = 'Logged in as: ' + sessionStorage.getItem('test123');
+    </script>
+    <h1>Home Page</h1>
+    <h2>Add a school</h2>
+    <input type="text" id="search-field">
+    <button id="search-button">Search</button>
+    <div id="school-list"></div>
+    <script>
+        const search_button = document.getElementById('search-button');
+        const search_field = document.getElementById('search-field');
+        search_button.onclick = function() {
+            const newDiv = document.getElementById('school-list');
+            fetch('http://universities.hipolabs.com/search?name='+search_field.value+'&country=united+states').then(data => data.json()).then(data => data.forEach(item => {
+                const container = document.createElement('div');
+                container.style.display = 'flex';
+                const schoolName = document.createElement('h3');
+                const addButton = document.createElement('button');
+                addButton.textContent = 'ADD';
+                schoolName.textContent = item.name;
+                container.append(schoolName);
+                container.append(addButton);
+                newDiv.append(container);
+                addButton.onclick =  function() {
+                    fetch('http://localhost:8080/insertsongs/'+sessionStorage.getItem('username')+'/'+schoolName.textContent);
+                }
+            }));
+        }
+    </script>
+</body>
+</html>
