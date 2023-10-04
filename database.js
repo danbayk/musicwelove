@@ -4,7 +4,7 @@ let instance = null;
 const pool = mysql.createConnection({
         host: '127.0.0.1',
         user: 'root',
-        password: 'root',
+        password: '$$$$$$$asF',
         database: 'musicdatabase'
 });
 
@@ -151,7 +151,39 @@ class databaseQueries {
             const response = await new Promise((resolve, reject) => {
                 const query = "UPDATE users SET school = ? WHERE username = ?";
 
-                pool.query(query, [school, username], (err, results) => {
+                pool.query(query, [school.replace(/\s/g, ""), username], (err, results) => {
+                    if(err) reject(new Error(err.message));
+                    resolve(results);
+                });
+            });
+            return response;
+        } catch(error) {
+            console.log(error);
+        }
+    }
+
+    async getSchoolSongs(school) {
+        try {
+            const response = await new Promise((resolve, reject) => {
+                const query = "SELECT * FROM songs INNER JOIN songs_users ON songs.id = songs_users.songs_id INNER JOIN users ON songs_users.users_username = users.username WHERE school = ?";
+
+                pool.query(query, [school], (err, results) => {
+                    if(err) reject(new Error(err.message));
+                    resolve(results);
+                });
+            });
+            return response;
+        } catch(error) {
+            console.log(error);
+        }
+    }
+
+    async getUserSongs(username) {
+        try {
+            const response = await new Promise((resolve, reject) => {
+                const query = "SELECT * FROM users INNER JOIN songs_users ON users.username = songs_users.users_username INNER JOIN songs ON songs_users.songs_id = songs.id WHERE username = ?";
+
+                pool.query(query, [username], (err, results) => {
                     if(err) reject(new Error(err.message));
                     resolve(results);
                 });

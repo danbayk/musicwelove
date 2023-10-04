@@ -11,7 +11,7 @@
         if(username !== '') {
             sessionStorage.setItem('username', username);
         }
-        document.getElementById('username').textContent = 'Logged in as: ' + sessionStorage.getItem('test123');
+        document.getElementById('username').textContent = 'Logged in as: ' + sessionStorage.getItem('username');
     </script>
     <h1>Home Page</h1>
     <h2>Add a school</h2>
@@ -28,13 +28,14 @@
                 container.style.display = 'flex';
                 const schoolName = document.createElement('h3');
                 const addButton = document.createElement('button');
-                addButton.textContent = 'ADD';
                 schoolName.textContent = item.name;
+                addButton.textContent = "ADD";
                 container.append(schoolName);
                 container.append(addButton);
                 newDiv.append(container);
                 addButton.onclick =  function() {
                     fetch('http://localhost:8080/insertsongs/'+sessionStorage.getItem('username')+'/'+schoolName.textContent);
+                    window.location.href = 'http://localhost:8080/test/'+username+'/'+schoolName.textContent;
                 }
             }));
         }

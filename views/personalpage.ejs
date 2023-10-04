@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+<h1 id="largeTitle"></h1>
+<div id="button-div"></div>
+<table>
+    <thead>
+    <tr>
+        <th>Username</th>
+        <th>Similarity</th>
+    </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+</table>
+<div id="usertable"></div>
+<script>
+    const username = '<%=locals.username%>';
+    const school = '<%=locals.school%>';
+    document.getElementById('largeTitle').textContent = "Your Similarity @ " + school;
+    const schoolPageButton = document.createElement('button');
+    schoolPageButton.textContent = "School Page";
+    schoolPageButton.onclick = () => {
+        window.location.href = "http://localhost:8080/test/"+username+"/"+school;
+    }
+    const personalPageButton = document.createElement('button');
+    personalPageButton.textContent = "Personal Page";
+    const buttonDiv = document.getElementById('button-div');
+    buttonDiv.appendChild(schoolPageButton);
+    buttonDiv.appendChild(personalPageButton);
+
+    fetch('http://localhost:8080/personalpagedata/'+username+'/'+school.replace(/\s/g, "")).then(data => data.json()).then(data => data.data.forEach(user => {
+        const outerTableTag = document.createElement('table');
+        const innertheadTag = document.createElement('thead');
+        const trTag = document.createElement('tr');
+        const usernameLabel = document.createElement('th');
+        const similarityLabel = document.createElement('th');
+        const songsLabel = document.createElement('th');
+        const thTagUsername = document.createElement('td');
+        const thTagSimilarity = document.createElement('td');
+        const thTagSimilarSongs = document.createElement('td');
+        thTagUsername.textContent = user.username;
+        thTagSimilarity.textContent = user.similarity;
+        thTagSimilarSongs.textContent = user.intersection;
+        trTag.appendChild(thTagUsername);
+        trTag.appendChild(thTagSimilarity);
+        trTag.appendChild(thTagSimilarSongs);
+        innertheadTag.appendChild(trTag);
+        outerTableTag.appendChild(innertheadTag);
+        document.getElementById('usertable').appendChild(outerTableTag);
+        // const row = document.createElement('tr');
+        // row.setAttribute('id', user.username);
+        // const displayUsername = document.createElement('td');
+        // const displaySimilarity = document.createElement('td');
+        // displayUsername.textContent = user.username;
+        // displaySimilarity.textContent = user.similarity;
+        // row.appendChild(displayUsername);
+        // row.appendChild(displaySimilarity);
+        // outerContainerTable.appendChild(row);
+    }));
+</script>
+</body>
+</html>

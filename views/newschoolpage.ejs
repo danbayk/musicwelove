@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>School</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/newschoolpage.css" type="text/css">
+  <link rel="shortcut icon" type="image/png" href="../photos/favicon.PNG">
+  <title>Title</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+    }
+  </style>
+</head>
+<header>
+  <h1><em>musicwelove! at UMass</em></h1>
+</header>
+<body>
+<div id="songlist"></div>
+<h1 id="schoolTitle"></h1>
+<div id="button-div"></div>
+<table>
+  <thead>
+  <tr>
+    <th>Song Name</th>
+    <th>Artist</th>
+    <th>Album</th>
+    <th>Added By</th>
+  </tr>
+  </thead>
+  <tbody id="tableBody"></tbody>
+</table>
+<script>
+  const navbar = document.querySelector('header');
+  const mainTitle = document.querySelector('h1');
+  navbar.style.height = '150px';
+  mainTitle.style.fontSize = '130px';
+  window.addEventListener('scroll', function() {
+    const maxOffset = 100;
+    const offset = window.pageYOffset;
+
+    if(offset <= maxOffset) {
+      const percentage = offset/maxOffset;
+      const navBarHeight = (150 - (80 * percentage)).toString() + 'px';
+      const titleHeight = (130 - (70 * percentage)).toString() + 'px';
+      navbar.style.height = navBarHeight;
+      mainTitle.style.fontSize = titleHeight;
+    }
+  })
+</script>
+<script>
+  const outerContainerTable = document.getElementById('tableBody');
+  const schoolName = '<%=schoolname%>'
+  const username = '<%=username%>';
+  const title = document.getElementById('schoolTitle');
+  // title.textContent = 'musicwelove @ ' + schoolName;
+  const checkID = [];
+
+  const schoolPageButton = document.createElement('button');
+  schoolPageButton.textContent = "School Page";
+  const personalPageButton = document.createElement('button');
+  personalPageButton.textContent = "Personal Page";
+  personalPageButton.onclick = () => {
+    window.location.href = "http://localhost:8080/personalpage/"+username+"/"+schoolName;
+  }
+  const buttonDiv = document.getElementById('button-div');
+  buttonDiv.appendChild(schoolPageButton);
+  buttonDiv.appendChild(personalPageButton);
+
+  class tableEntry {
+    constructor(name, artist, album, id, users) {
+      this.name = name;
+      this.artist = artist;
+      this.album = album;
+      this.id = id;
+      this.users = users;
+    }
+  }
+
+  fetch('http://localhost:8080/getsongs/'+schoolName.replace(/\s/g, "")).then(data => data.json()).then(data => data.data.forEach(item => {
+    if(checkID.some(entry => entry['id'] === item.id)) {
+      checkID.find(entry => entry['id'] === item.id).users.push(item.username);
+    } else {
+      checkID.push(new tableEntry(item.songname, item.artist, item.album, item.id, [item.username]));
+    }
+    checkID.sort((a, b) => b.users.length - a.users.length)
+  })).then(entries => checkID.forEach(entry => {
+    const row = document.createElement('tr');
+    row.setAttribute('id', entry.id);
+    const songTableEntry = document.createElement('td');
+    const artistTableEntry = document.createElement('td');
+    const albumTableEntry = document.createElement('td');
+    const addedBy = document.createElement('td');
+    songTableEntry.textContent = entry.name;
+    artistTableEntry.textContent = entry.artist;
+    albumTableEntry.textContent = entry.album;
+    addedBy.textContent = entry.users;
+    row.appendChild(songTableEntry);
+    row.appendChild(artistTableEntry);
+    row.appendChild(albumTableEntry);
+    row.appendChild(addedBy);
+    outerContainerTable.appendChild(row);
+  }));
+</script>
+</body>
+</html>

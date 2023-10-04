@@ -18,7 +18,7 @@ const scopes = 'user-read-email user-read-private user-top-read';
 const app = express();
 app.set('view engine', 'ejs');
 
-app.use(express.static('.'));
+app.use('/public', express.static('public'));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended : false}));
@@ -41,11 +41,26 @@ app.get('/getdata', (request, response) => {
     result.then(data => response.json({data : data})).catch(err => console.log(err));
 })
 
+app.get('/getsongs/:school', (request, response) => {
+    const db = database.getServiceInstance();
+    const school = request.params.school;
+    const result = instance.getSchoolSongs(school);
+
+    // result.then(data => response.render('schoolpage', {data: data})).catch(err => console.log(err));
+    result.then(data => response.json({data: data})).catch(err => console.log(err));
+})
+
 app.get('/getusername/:name', (request, response) => {
     const username = request.params.name;
     const db = database.getServiceInstance();
     const result = instance.getUsername(username);
     result.then(data => response.json({data : data})).catch(err => console.log(err));
+})
+
+app.get('/test/:username/:schoolname', (request, response) => {
+    const username = request.params.username;
+    const schoolName = request.params.schoolname;
+    response.render('newschoolpage', {schoolname: schoolName, username: username});
 })
 
 app.get('/insertsongs/:name/:school', (request, response) => {
@@ -56,11 +71,56 @@ app.get('/insertsongs/:name/:school', (request, response) => {
     getTopTracks(username).then(data => addTracksAndLinkUser(data, username)).catch(err => console.log('error: ' + err));
 })
 
+app.get('/personalpage/:username/:school', async (request, response) => {
+    const username = request.params.username;
+    const school = request.params.school;
+    response.render('personalpage', {username: username, school: school});
+})
+
+app.get('/personalpagedata/:username/:school', async (request, response) => {
+    const username = request.params.username;
+    const school = request.params.school;
+    const db = database.getServiceInstance();
+    const schoolUsers = [];
+
+    class user {
+        constructor(username, songs, intersection, union, similarity) {
+            this.username = username;
+            this.songs = songs;
+            this.intersection = intersection;
+            this.union = union;
+            this.similarity = similarity;
+        }
+    }
+
+    const currentSchoolSongs = await instance.getSchoolSongs(school);
+    currentSchoolSongs.forEach(item => {
+        if(schoolUsers.some(entry => entry['username'] === item.username)) {
+            schoolUsers.find(entry => entry['username'] === item.username).songs.push(item.id);
+        } else {
+            schoolUsers.push(new user(item.username, [item.id]));
+        }
+    });
+    const currentUser = schoolUsers.find(entry => entry['username'] === username);
+    schoolUsers.forEach(user => {
+        currentUser.username !== user.username ? user.similarity = getSimilarityIndex(currentUser, user).similarityIndex : currentUser.similarity = 0;
+        user.intersection = getSimilarityIndex(currentUser, user).intersection;
+        user.union = getSimilarityIndex(currentUser, user).union;
+    })
+    response.json({data: schoolUsers.sort((a, b) => b.similarity - a.similarity)})
+})
+
+function getSimilarityIndex(currentUser, otherUser) {
+    const intersection = [];
+    const union = [];
+    currentUser.songs.forEach(song => otherUser.songs.includes(song) ? intersection.push(song) : union.push(song));
+    return {similarityIndex: intersection.length / union.length, intersection: intersection, union: union};
+}
+
 // spotify API routes
 app.get('', function(req, res) {
     console.log('home');
-    // res.sendFile(__dirname + '/views/login.ejs');
-    res.render('login');
+    res.render('newlogin');
 });
 
 app.get('/login', function(req, res) {
@@ -120,7 +180,6 @@ app.get('/callback', function(req, res) {
             res.render('home', {username: await getSpotifyUsername(body.access_token)});
         })
     }
-    // res.sendFile(__dirname + '/views/home.ejs');
 });
 
 function addTracksAndLinkUser(songs, username) {
@@ -152,6 +211,7 @@ async function getSpotifyUsername(access_token) {
 async function isFirstTimeLogin(spotifyID) {
     return new Promise((resolve) => {
         fetch('http://localhost:8080/getusername/' + spotifyID).then(response => response.json()).then(response => {
+            console.log(response);
             resolve(response.data.length === 0);
         });
     })
