@@ -74,7 +74,7 @@ app.get('/insertsongs/:name/:school', (request, response) => {
 app.get('/personalpage/:username/:school', async (request, response) => {
     const username = request.params.username;
     const school = request.params.school;
-    response.render('personalpage', {username: username, school: school});
+    response.render('newpersonalpage', {username: username, school: school});
 })
 
 app.get('/personalpagedata/:username/:school', async (request, response) => {
@@ -184,7 +184,7 @@ app.get('/callback', function(req, res) {
 
 function addTracksAndLinkUser(songs, username) {
     songs.items.forEach(track => {
-        instance.insertSong(track.name, track.artists[0].name, track.album.name, track.external_urls.spotify, track.id)
+        instance.insertSong(track.name, track.artists[0].name, track.album.name, track.external_urls.spotify, track.id, track.album.images[0].url)
             .then(instance.linkSongWithUser(track.id, username)
                 .catch(err => console.log('error: ' + err)))
             .catch(err => console.log('error: ' + err));

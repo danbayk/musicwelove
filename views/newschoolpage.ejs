@@ -5,19 +5,10 @@
   <title>School</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;1,9..40,700&family=Roboto:ital,wght@1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/public/newschoolpage.css" type="text/css">
   <link rel="shortcut icon" type="image/png" href="../photos/favicon.PNG">
   <title>Title</title>
-  <style>
-    table {
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid black;
-      padding: 8px;
-    }
-  </style>
 </head>
 <header>
   <h1><em>musicwelove! at UMass</em></h1>
@@ -29,6 +20,7 @@
 <table>
   <thead>
   <tr>
+    <th>Cover</th>
     <th>Song Name</th>
     <th>Artist</th>
     <th>Album</th>
@@ -75,7 +67,8 @@
   buttonDiv.appendChild(personalPageButton);
 
   class tableEntry {
-    constructor(name, artist, album, id, users) {
+    constructor(cover, name, artist, album, id, users) {
+      this.cover = cover;
       this.name = name;
       this.artist = artist;
       this.album = album;
@@ -88,20 +81,25 @@
     if(checkID.some(entry => entry['id'] === item.id)) {
       checkID.find(entry => entry['id'] === item.id).users.push(item.username);
     } else {
-      checkID.push(new tableEntry(item.songname, item.artist, item.album, item.id, [item.username]));
+      checkID.push(new tableEntry(item.cover, item.songname, item.artist, item.album, item.id, [item.username]));
     }
     checkID.sort((a, b) => b.users.length - a.users.length)
   })).then(entries => checkID.forEach(entry => {
     const row = document.createElement('tr');
     row.setAttribute('id', entry.id);
+    const cover = document.createElement('td');
+    const coverImage = document.createElement('img');
     const songTableEntry = document.createElement('td');
     const artistTableEntry = document.createElement('td');
     const albumTableEntry = document.createElement('td');
     const addedBy = document.createElement('td');
+    cover.appendChild(coverImage);
+    coverImage.src = entry.cover
     songTableEntry.textContent = entry.name;
     artistTableEntry.textContent = entry.artist;
     albumTableEntry.textContent = entry.album;
     addedBy.textContent = entry.users;
+    row.appendChild(cover);
     row.appendChild(songTableEntry);
     row.appendChild(artistTableEntry);
     row.appendChild(albumTableEntry);

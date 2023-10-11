@@ -93,7 +93,7 @@ class databaseQueries {
         }
     }
 
-    async insertSong(songname, artist, album, url, id) {
+    async insertSong(songname, artist, album, url, id, cover) {
         const newSong = await new Promise((resolve, reject) => {
             const query = "SELECT id FROM songs WHERE id = ?";
 
@@ -105,9 +105,9 @@ class databaseQueries {
         if(newSong) {
             try {
                 const response = await new Promise((resolve, reject) => {
-                    const query = "INSERT INTO songs (songname, artist, album, url, id) VALUES (?, ?, ?, ?, ?)";
+                    const query = "INSERT INTO songs (songname, artist, album, url, id, cover) VALUES (?, ?, ?, ?, ?, ?)";
 
-                    pool.query(query, [songname, artist, album, url, id], (err, results) => {
+                    pool.query(query, [songname, artist, album, url, id, cover], (err, results) => {
                         if(err) reject(new Error(err.message));
                         resolve(results);
                     });
