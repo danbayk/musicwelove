@@ -120,11 +120,11 @@ function getSimilarityIndex(currentUser, otherUser) {
 // spotify API routes
 app.get('', function(req, res) {
     console.log('home');
-    res.render('newlogin');
+    res.render('login');
 });
 
 app.get('/login', function(req, res) {
-   console.log('login');
+   console.log('login.ejs');
    const state = '34fFs29kd09';
    res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({

@@ -1,7 +1,149 @@
-h1{
-    color: aqua;
+body,html{
+    background-image: url("gif2.gif");
+    margin: 0;
+    padding-top: 75px;
+    background-color: #ffffff
 }
 
-body{
-    background-color: blueviolet;
+.login-button{
+    background-color: #39ca74;
+    border: 1px solid #000000;
+    transition: background-color 0.2s;
+    margin: 10% 10% 10%;
+}
+
+.login-button:hover{
+    background-color: #3aa161;
+}
+
+.login-button-inner{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    color: #000000;
+    margin: 2% 2% 2%;
+}
+
+input[type="text"] {
+    padding: 5px;
+    border: 1px solid #000;
+    border-radius: 0;
+    font-size: 16px;
+    outline: none;
+    width: 90%;
+}
+
+input[type="text"]:focus {
+    border-color: #007BFF;
+}
+
+.input-field{
+    margin-top: -50px;
+    margin-right: 5%;
+    margin-left: 5%;
+}
+
+.outerlogincontainer{
+    width: 30%;
+    margin-top: 170px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+}
+
+.logo-text{
+    margin-top: -25px;
+    text-align: center;
+}
+
+.login-text{
+    text-align: center;
+    margin-top: -50px;
+    border-bottom: 2px solid #000000;
+}
+
+.email-text{
+    margin-left: 5%;
+    margin-top: 100px;
+}
+
+.password-text{
+    margin-left: 5%;
+    margin-top: 70px;
+}
+
+header{
+    background-color: #ffffff;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    width: 100%;
+    border: 2px solid #000000;
+}
+
+.loginwithspotify{
+    background-color: #39ca74;
+    border: 2px solid #000000;
+    position: absolute;
+    height: 50px;
+    width: 270px;
+    top: 0px;
+    right: 0px;
+    transition: background-color 0.2s;
+}
+
+.loginwithspotify:hover{
+    background-color: #3aa161;
+}
+
+.loginwithspotify-inner-text{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    color: #000000;
+    margin-top: 8px;
+}
+
+.header2{
+    height: 70px;
+    background-color: #ffffff;
+}
+
+h1{
+    position: absolute;
+    float: left;
+    margin-left: 30px;
+    margin-top: 0px;
+    font-family: 'Roboto', sans-serif;
+    color: #000000;
+}
+
+h2{
+    text-align: center;
+    margin-left: 10px;
+    margin-top: 10px;
+    font-family: 'Roboto', sans-serif;
+    color: #000000;
+    font-size: 50px;
+}
+
+h3{
+    font-family: 'Roboto', sans-serif;
+    font-size: 50px;
+}
+
+h4{
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+}
+
+h5{
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+span{
+    color: #ffffff;
 }

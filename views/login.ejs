@@ -1,17 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="/public/login.css">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <title>Welcome</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../public/login.css" type="text/css">
+    <link rel="shortcut icon" type="image/png" href="../photos/favicon.PNG">
 </head>
-<body>
-<h1>test</h1>
-    <button onclick="authorize()">Login with Spotify</button>
-    <script>
-        function authorize() {
-            window.location.href = 'http://localhost:8080/login';
+<header>
+    <h1><em>musicwelove!</em></h1>
+    <div class="loginwithspotify">
+        <div class="loginwithspotify-inner-text"><a href="http://localhost:8080/login">register new account</a>
+        </div>
+    </div>
+</header>
+<script>
+    const navbar = document.querySelector('header');
+    const title = document.querySelector('h1');
+    const loginButton = document.querySelector('.loginwithspotify');
+    navbar.style.height = '150px';
+    title.style.fontSize = '130px';
+    loginButton.style.marginTop = '45px';
+    loginButton.style.marginRight = '45px';
+    window.addEventListener('scroll', function() {
+        const maxOffset = 100;
+        const offset = window.pageYOffset;
+
+        if(offset <= maxOffset) {
+            const percentage = offset/maxOffset;
+            const navBarHeight = (150 - (80 * percentage)).toString() + 'px';
+            const titleHeight = (130 - (70 * percentage)).toString() + 'px';
+            const loginMargin = (45 - (37 * percentage)).toString() + 'px';
+            navbar.style.height = navBarHeight;
+            title.style.fontSize = titleHeight;
+            loginButton.style.marginTop = loginMargin;
         }
-    </script>
+    })
+</script>
+<body>
+<div class="outerlogincontainer">
+    <div class="logo-text">
+        <h3>musicwelove!</h3>
+    </div>
+    <div class="login-text">
+        <h4>(login)</h4>
+    </div>
+    <div class="email-text">
+        <div class="input-field">
+            <h5>email</h5>
+            <input type="text" id="email-field">
+        </div>
+    </div>
+    <div class="password-text">
+        <div class="input-field">
+            <h5>password</h5>
+            <input type="text" id="passworde-field">
+        </div>
+    </div>
+    <div class="login-button">
+        <div class="login-button-inner">
+            login
+        </div>
+    </div>
+</div>
 </body>
 </html>
